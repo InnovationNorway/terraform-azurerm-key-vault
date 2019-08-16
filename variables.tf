@@ -44,6 +44,12 @@ variable "secrets" {
   default     = {}
 }
 
+variable "self_assign_service_principal" {
+  type = bool
+  description = "If should attempt to self assign access when used via service princiapl user."
+  default = true
+}
+
 variable "tags" {
   type        = map
   description = "A mapping of tags to assign to the resources."
@@ -117,7 +123,7 @@ locals {
     }
   ]
 
-  service_principal_object_id = data.azurerm_client_config.main.service_principal_object_id
+  service_principal_object_id = var.self_assign_service_principal == true ? data.azurerm_client_config.main.service_principal_object_id : ""
 
   self_permissions = {
     object_id          = local.service_principal_object_id
